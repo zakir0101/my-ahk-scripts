@@ -1,0 +1,24 @@
+Folder PATH listing for volume DATA
+Volume serial number is 7033-BA2A
+D:.
+|   all_script.ahk1 [ all the script combined together ]
+|   keymapping_for_german_character.ahk1 [ remamping | > < , for Asci Keyboard layout ]
+|   NaviagateWindowPerHJKL.ahk1 [ navigate window selector ( Alt+TAB ) by HJKL insted of arrows ]
+|   NavigateWindowsPerNumber.ahk1 [ open most used windows by Alt+(number) , ex. Alt+1 open/focus chrome 
+|   README.md 
+|   switch_vitrual_desktop_shortcuts.ahk1 [ swich between opened virtual Desktop (spaces) with WIN+(number) ]
+|   utils.ahk1
+|   
++---Language & Layout
+|       change_Keyboard_layout.ahk1 [ switch between language , ex. Alt+shift+1 == german , defualt Alt+Shift should be disabld
+|       getCurrentLayout.ahk1 
+|       SetLanguageEnglish.ahk1
+|       SetLanguageGerman.ahk1
+|       
+\---Neovim
+        checkNeovimProccess.ahk1
+        checkNeovimWindowTitle.ahk1
+        newvimNotifyClient.ahk1
+        temp.ahk1
+        
+

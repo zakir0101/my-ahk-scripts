@@ -1,0 +1,129 @@
+showAll(){
+	WinGet windows, List
+
+	Loop %windows%
+	{
+		id := windows%A_Index%
+		WinGetTitle wt, ahk_id %id%
+		WinGetClass, wclass ,ahk_id %id%,
+		WinGet, wProcName , ProcessName, ahk_id %id%
+		If wt
+			r .= id . ". " .  wt . "####" . wProcName . "### class : " . wclass "`n"
+
+	}
+	FileAppend %r% `n, *
+	MsgBox %r%
+}
+
+openTerminal(){
+	processName := "ahk_exe WindowsTerminal.exe"
+
+
+	WinGetTitle title,  ahk_exe WindowsTerminal.exe
+	if ( WinExist( "ahk_exe WindowsTerminal.exe") )
+	{
+		WinActivate,  ahk_exe WindowsTerminal.exe                             
+		WinMaximize, ahk_exe WindowsTerminal.exe
+	}
+	else{
+		Run, C:\Program Files\WindowsApps\microsoft.windowsterminal_1.19.11213.0_x64__8wekyb3d8bbwe\WindowsTerminal.exe
+	}
+
+}
+
+
+openCode(){
+	processName = ahk_exe Code.exe
+
+
+	WinGetTitle title,  %processName%
+	FileAppend, %title% , *
+	if ( WinExist( processName) )
+	{
+		WinActivate,  %processName%                             
+		WinMaximize, %processName%
+	}
+	else{
+		Run, code
+	}
+
+}
+
+openMatlab(){
+	processName = ahk_exe matlab.exe
+
+
+	WinGetTitle title,  %processName%
+	FileAppend, %title% , *
+	if ( WinExist( processName) )
+	{
+		WinActivate,  %processName%                             
+		WinMaximize, %processName%
+	}
+	else{
+		; Run, matlab.exe
+		ToolTip,  Matlab is NOT Opened, 20, 20
+		SetTimer, RemoveTooltip, -2000
+	}
+
+}
+
+
+openWebBased(processName  , titleNeedle ){
+	; processName = "ahk_exe chrome.exe"
+	
+
+	title = ""
+	WinGet windows, List , ahk_exe %processName%
+	Found := 0
+	
+	Loop %windows%
+	{
+		id := windows%A_Index%
+		WinGetTitle title, ahk_id %id%
+		FileAppend, %title%, *
+		If InStr( title , titleNeedle ){
+			Found := 1
+			Break
+		}
+	}
+	
+	if ( Found )
+	{
+		WinActivate,  %title%                             
+		WinMaximize, %title%
+	}
+	else{
+		Run, C:\Program Files\Google\Chrome\Application\chrome.exe
+	}
+
+}
+
+
+
+openChrome(){
+	processName = chrome.exe
+	titleNeedle = Google Chrome
+	
+	openWebBased(processName  , titleNeedle )
+}
+
+openChatGpt(){
+	processName = chrome.exe
+	titleNeedle = ChatGPT (WPA) - 
+	openWebBased( processName  , titleNeedle )
+	
+}
+
+
+
+RALT & 1::openChrome()
+RALT & 2::openChatGpt()
+RALT & 3::openTErminal()
+RALT & 4::openCode()
+RALT & 5::openMatlab()
+
+
+RemoveTooltip:
+    Tooltip
+return

@@ -1,0 +1,69 @@
+#Persistent
+
+SetTimer, WatchActiveWindow, 500
+currentState := "unfocused"
+
+WatchActiveWindow:
+    ; Get the active window's process name
+    WinGet, activeProcess, ProcessName , A
+    ; WinGet, OutputVar [, Cmd, WinTitle, WinText, ExcludeTitle, ExcludeText]
+
+    ; "WinGet, ${OutputVar [}, ${Cmd}, ${WinTitle}, ${WinText}, ${ExcludeTitle}, ${ExcludeText]}"
+    ; ."Retrieves the specified window's unique ID, process ID, process name, or a list of its controls. It can also retrieve a list of all windows matching the specified criteria."
+
+    RemoveTooltip()
+    ; "`nProcessName: " ProcessName "`n"A "`n" B "`n" C
+    ToolTip,   % "Current Process: " activeProcess  , 20, 20,
+    SetTimer, RemoveTooltip, -10000
+Return
+; Check if the active process is nvim.exe
+if (activeProcess = "nvim.exe")
+{
+    if (currentState != "focused")
+    {
+        ; Neovim just gained focus
+
+        ; SendMessageToNeovim("focus_gained")
+        currentState := "focused"
+        RemoveTooltip()
+        ToolTip,   % "Hoppla , Neovim is ACTIVE", 20, 20,
+        SetTimer, RemoveTooltip, -10000
+    }
+}
+else
+{
+    if (currentState != "unfocused")
+    {
+        ; Neovim just lost focus
+
+        ; SendMessageToNeovim("focus_lost")
+        currentState := "unfocused"
+
+        RemoveTooltip()
+        ToolTip,   "Neovim Lost Focus :(", 20, 20,
+        SetTimer, RemoveTooltip, -10000
+    }
+}
+return
+
+SendMessageToNeovim(message)
+{
+    ; Define the server's address and port
+    server := "127.0.0.1"
+    port := 12345
+
+    ; Create a PowerShell command to send the message over TCP
+    cmd := "powershell -Command ""$client = New-Object System.Net.Sockets.TCPClient('" server "', " port ");"
+    cmd .= "$stream = $client.GetStream();"
+    cmd .= "$bytes = [System.Text.Encoding]::UTF8.GetBytes('" message "');"
+    cmd .= "$stream.Write($bytes, 0, $bytes.Length);"
+    cmd .= "$stream.Close();"
+    cmd .= "$client.Close();"""
+
+    RunWait, %cmd%, , Hide
+}
+
+RemoveTooltip(){
+    Tooltip
+    return
+}

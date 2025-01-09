@@ -1,0 +1,92 @@
+#Persistent
+SetTimer, WatchActiveWindow, 500
+return
+
+WatchActiveWindow(){
+    WinGetActiveTitle, activeTitle
+    global prevWindowTitle
+    if InStr(prevWindowTitle , activeTitle) || InStr(activeTitle , "Task Switching") 
+    {
+        Return
+    }
+    RemoveTooltip
+    ToolTip,   % "Window Title: " activeTitle "`nPrevious Title: " prevWindowTitle
+     . "`nCurrent Language " getCurrentLanguageID(), 20, 20, 
+    SetTimer, RemoveTooltip, -10000
+
+    ; MsgBox, , "Window changed !!", % "Window Title: " activeTitle "`nPrevious Title: " prevWindowTitle
+    ; . "`nCurrent Language " getCurrentLanguageID()  
+    prevWindowTitle := activeTitle
+
+    Return
+    
+    if InStr(activeTitle, "Neovim") 
+    {
+
+        ; Neovim is active, ensure language is English
+        ; SetDefaultKeyboardLang(english)
+
+        ; MsgBox % "setting language to US " activeTitle  GetLayout(Language := "")  english
+    }
+    else
+    {
+        ; Neovim is not active, switch to German
+        ; SetDefaultKeyboardLang(german)
+        ; MsgBox "setting language to DE " , %LocaleID% , GetLayout(Language := "") german
+
+    }
+    return
+}
+
+SetDefaultKeyboardLang(LocaleID){
+    Static SPI_SETDEFAULTINPUTLANG := 0x005A, SPIF_SENDWININICHANGE := 2
+    Lan := DllCall("LoadKeyboardLayout", "Str", Format("{:08x}", LocaleID), "Int", 0)
+    VarSetCapacity(binaryLocaleID, 4, 0)
+    NumPut(LocaleID, binaryLocaleID)
+    ; MsgBox,  , "Local iDS",% "Local ID: " LocaleID  "`nbinary ID : " &binaryLocaleID  "`nlanguage ID : "  Lan,
+
+    DllCall("SystemParametersInfo", "UInt", SPI_SETDEFAULTINPUTLANG, "UInt", 0, "UPtr", &binaryLocaleID, "UInt", SPIF_SENDWININICHANGE)
+    WinGet, windows, List
+    Loop % windows {
+        PostMessage 0x50, 0, % Lan, , % "ahk_id " windows%A_Index%
+    }
+}
+
+getGermanID(){
+    localID := 0x0407
+    ; langID := getCurrentLanguageID(localID)
+    langID = 67568647
+    return langID
+}
+
+getEnglishID(){
+    localID := 0x02809
+    ; langID := getCurrentLanguageID(localID)
+    langID = 67699721
+    return langID
+}
+
+getCurrentLanguageID()
+{
+    
+    WinGet, WinID,, A
+    ThreadID:=DllCall("GetWindowThreadProcessId", "UInt", WinID, "UInt", 0)
+    InputLocaleID :=DllCall("GetKeyboardLayout", "UInt", ThreadID, "UInt")
+    If(!InputLocaleID){
+        WinActivate, ahk_class WorkerW
+        WinGet, WinID2,, ahk_class WorkerW
+        ThreadID:=DllCall("GetWindowThreadProcessId", "UInt", WinID2, "UInt", 0)
+        WinActivate, ahk_id %WinID%
+        InputLocaleID:=DllCall("GetKeyboardLayout", "UInt", ThreadID, "UInt")
+    }
+    ; MsgBox,  , "Current Layout", % "Current Language ID: "  InputLocaleID ,
+    Return InputLocaleID
+
+}
+
+
+
+
+RemoveTooltip:
+    Tooltip
+return

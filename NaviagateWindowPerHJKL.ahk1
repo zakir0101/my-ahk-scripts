@@ -1,0 +1,11 @@
+
+#IfWinActive , ahk_class XamlExplorerHostIslandWindow  ; Win11
+!k::Send {Blind}{Up}
+!j::Send {Blind}{Down}
+!h::Send {Blind}{Left}
+!l::Send {Blind}{Right}
+#IfWinActive
+
+
+
+

@@ -1,0 +1,22 @@
+
+; https://autohotkey.com/boards/viewtopic.php?f=6&t=18519
+SetDefaultKeyboardLang(LocaleID){
+	Static SPI_SETDEFAULTINPUTLANG := 0x005A, SPIF_SENDWININICHANGE := 2	
+	Lan := DllCall("LoadKeyboardLayout", "Str", Format("{:08x}", LocaleID), "Int", 0)
+	VarSetCapacity(binaryLocaleID, 4, 0)
+	NumPut(LocaleID, binaryLocaleID)
+	; MsgBox,  , "Local iDS",% "Local ID: " LocaleID  "`nbinary ID : " &binaryLocaleID  "`nlanguage ID : "  Lan, 
+
+	DllCall("SystemParametersInfo", "UInt", SPI_SETDEFAULTINPUTLANG, "UInt", 0, "UPtr", &binaryLocaleID, "UInt", SPIF_SENDWININICHANGE)	
+	WinGet, windows, List
+	Loop % windows {
+		PostMessage 0x50, 0, % Lan, , % "ahk_id " windows%A_Index%
+	}
+}
+
+
+; https://docs.microsoft.com/de-de/windows/desktop/Intl/language-identifier-constants-and-strings
+
+!+1::SetDefaultKeyboardLang(0x0407)  ; german
+!+2::SetDefaultKeyboardLang(0x02809) ; english
+!+3::SetDefaultKeyboardLang(0x0401) ; arabic saudi arabia 

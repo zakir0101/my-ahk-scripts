@@ -1,0 +1,68 @@
+#Persistent
+SetTimer, GetProcessPIDs, 3000  ; Check every 1 second
+SetTimer, CheckNvimActive, 1000  ; Check every 1 second
+return
+
+CheckNvimActive:
+    ; Step 1: Get all running PIDs of nvim.exe
+    global pids
+
+    if (nvimPIDs.Length() = 0)
+    {
+        ; No instances of nvim.exe are running
+        Tooltip, No instances of nvim.exe are running.
+        return
+    }
+
+    ; Step 2: Get the PID of the active (foreground) window
+    WinGet, activePID, PID, A
+    Tooltip, current Active PID.`nPID: %activePID%
+
+    ; Step 3: Check if activePID is one of the nvimPIDs
+    if (IsInArray(activePID, nvimPIDs))
+    {
+        ; nvim.exe is active
+        Tooltip, nvim.exe is the active window.`nPID: %activePID%
+    }
+    ; else
+    ; {
+    ;     ; nvim.exe is not active
+    ;     Tooltip, nvim.exe is NOT the active window.
+    ; }
+return
+
+; Function to retrieve all PIDs of a given process name
+GetProcessPIDs()
+{
+     global pids := []
+     procName := "nvim.exe"
+     Process, Exist, nvim.exe
+    if (ErrorLevel){
+        for process in ComObjGet("winmgmts://").ExecQuery("SELECT ProcessId FROM Win32_Process WHERE Name='" procName "'")
+        {
+            pids.Push(process.ProcessId)
+        }
+        pids_str := dumpList(pids)
+        MsgBox, , "Active vim pids", "List :" %pids_str%, 
+    }
+    
+}
+
+; Function to check if a value exists within an array
+IsInArray(value, arr)
+{
+    for index, item in arr
+    {
+        if (item = value)
+            return true
+    }
+    return false
+}
+
+dumpList(Array){
+    Str := ""
+    For Index, Value In Array
+        Str .= Value . "|"
+    Str := RTrim(Str, "|") ; remove the last pipe (|)
+    Return Str
+}

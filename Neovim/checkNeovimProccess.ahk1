@@ -1,0 +1,35 @@
+#Persistent
+SetTimer, WatchNeovimProcess, 1000  ; Check every 1 second
+currentLang := "de-DE"
+
+WatchNeovimProcess:
+    ; Check if any nvim.exe process is running
+    Process, Exist, nvim.exe
+
+    if (ErrorLevel)  ; Neovim is running
+    {
+        if (currentLang != "en-US")
+        {
+            ; Switch to English
+            Run, "%configPath%\SetLanguageEnglish.exe", , Hide
+            currentLang := "en-US"
+            Tooltip, Switched to English layout
+            SetTimer, RemoveTooltip, -3000
+        }
+    }
+    else  ; Neovim is not running
+    {
+        if (currentLang != "de-DE")
+        {
+            ; Switch to German
+            Run, "%configPath%\SetLanguageGerman.exe", , Hide
+            currentLang := "de-DE"
+            Tooltip, Switched to German layout
+            SetTimer, RemoveTooltip, -3000
+        }
+    }
+return
+
+RemoveTooltip:
+    Tooltip
+return

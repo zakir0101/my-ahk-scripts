@@ -1,0 +1,18 @@
+dumpList(){
+    Str := ""
+    For Index, Value In Array
+        Str .= Value . "|"
+    Str := RTrim(Str, "|") ; remove the last pipe (|)
+    Return Str
+}
+
+dumpTable(){
+    Str := ""
+    For key, Value In Array
+        Str .= key . " = " . Value . "|`n"
+    Str := RTrim(Str, "|`n") ; remove the last pipe (|)
+    Return Str
+
+
+}
+

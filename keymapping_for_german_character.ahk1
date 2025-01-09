@@ -1,0 +1,15 @@
+﻿RAlt & i::SendRaw, <
+
+RAlt & o::SendRaw, >
+
+RAlt & p::SendRaw, |
+
+RAlt & ü::SendRaw, ~
+
+RAlt & 7::SendRaw, {
+
+RAlt & 0::SendRaw, }
+
+RAlt & 8::SendRaw, [
+
+RAlt & 9::SendRaw, ]
