@@ -1,3 +1,4 @@
+#InstallKeybdHook
 ; ******************* keymapping **************
 
 AlT & i::SendRaw, <
@@ -6,7 +7,11 @@ AlT & o::SendRaw, >
 
 AlT & p::SendRaw, |
 
-;AlT & ü::SendRaw, ~ 
+;!ü::SendRaw, ~ 
+
+SHIFT & SC029::SendRaw, $ 
+
+SC029::Send, {Text}^
 
 AlT & 7::SendRaw, {
 
