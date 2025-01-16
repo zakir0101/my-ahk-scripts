@@ -292,3 +292,29 @@ then
 width = screenWidth - x + padX
 
 
+
+XamlExplorerHostIslandWindow
+Title : Snap Assist
+executable : eplorer.exe ( I dont know how ?? )
+
+
+
+- I will write a suitable commit message for the prevois work
+git commit -m "started making a new script for implementing vim like window navigation and resizing, currently only moveEdge is functional , but I made alot of helpfull utility functions and tested them , they shall make the rease of the work easier ( In sha Allah ) "
+
+
+# Next Steps and general thoughts:
+
+1. small utility function getAlignedWindows , retrive window with border cound >= 2 , may use it to replace visible window.
+
+2. function readjustWindows , to make sure every visible/aligned window is pixle perfect aligned to its neighbour and the screen. ( may call it automaticly after each command moveEdge , resize , ..etc , also may define a new hotkey for it )
+
+3. define and extract all the calcualtion code which will/is common across function , to improve the readability and extensibility of the code. also to focus more time on that code and make it performant.
+
+4. disable mouse window drag completely ( last step ).
+
+5. research more about Snap Assist and how to integrate it in my code .
+
+6. make USE CASES and SENAERIOS , to find out what is the approach !! [ do this before starting with other functions ]
+
+7. thats it .
